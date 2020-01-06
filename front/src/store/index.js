@@ -4,8 +4,21 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
+  state: {
+    home: true,
+    uploads: false,
+    settings: false
+  },
+  mutations: {
+    changeActive(state, activeName = "nothing") {
+      state.active = {
+        home: false,
+        uploads: false,
+        settings: false
+      };
+      if (activeName != "nothing") state.active[activeName] = true;
+    }
+  },
   actions: {},
   modules: {}
 });
