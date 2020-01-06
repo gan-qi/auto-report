@@ -1,30 +1,92 @@
 <template>
   <div class="container">
-    <el-upload
-      class="upload-demo"
-      drag
-      action="https://jsonplaceholder.typicode.com/posts/"
-      multiple
-    >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">
-        只能上传jpg/png文件，且不超过500kb
+    <el-card shadow="always" class="box-card">
+      <div slot="header">
+        邮箱设置
       </div>
-    </el-upload>
-
-    <el-upload
-      class="upload-demo"
-      drag
-      action="/"
-      :on-success="handleSuccess"
-      :on-error="handleError"
-      :show-file-list="false"
-      :before-upload="beforeUpload"
-    >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将docx文件拖到此处，或<em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">{{ tips }}</div>
-    </el-upload>
+      <el-form
+        ref="ruleForm"
+        :rules="rules"
+        :model="ruleForm"
+        label-width="120px"
+      >
+        <el-form-item label="发件人姓名" required prop="fromName">
+          <el-input v-model="ruleForm.fromName"></el-input>
+        </el-form-item>
+        <el-form-item label="收件人姓名" required prop="toName">
+          <el-input v-model="ruleForm.toName"></el-input>
+        </el-form-item>
+        <el-form-item label="发送邮箱" required prop="fromEmail">
+          <el-input v-model="ruleForm.fromEmail"></el-input>
+        </el-form-item>
+        <el-form-item label="发送邮箱密令" required prop="fromEmailKey">
+          <el-input v-model="ruleForm.fromEmailKey"></el-input>
+        </el-form-item>
+        <el-form-item label="收件人邮箱" required prop="toEmail">
+          <el-input v-model="ruleForm.toEmail"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit('ruleForm')"
+            >保存</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      ruleForm: {
+        fromName: "",
+        toName: "",
+        fromEmail: "",
+        fromEmailKey: "",
+        toEmail: ""
+      },
+      rules: {
+        fromName: [
+          { required: true, message: "请输入发件人姓名", trigger: "blur" }
+        ],
+        toName: [
+          { required: true, message: "请输入收件人姓名", trigger: "blur" }
+        ],
+        fromEmail: [
+          { required: true, message: "请输入发送邮箱地址", trigger: "blur" }
+        ],
+        fromEmailKey: [
+          { required: true, message: "请输入发件邮箱密令", trigger: "blur" }
+        ],
+        toEmail: [
+          { required: true, message: "请输入收件人邮箱地址", trigger: "blur" }
+        ]
+      }
+    };
+  },
+  methods: {
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$message({
+            message: "保存成功",
+            type: "success"
+          });
+        } else {
+          return false;
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style scoped>
+.container {
+  padding: 30px 300px;
+}
+.box-card {
+  padding: 50px 60px;
+}
+</style>

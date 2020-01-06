@@ -4,8 +4,8 @@
       <el-row>
         <el-col :span="12">
           <div class="cardLeft">
-            <img src="../../assets/logo.png" alt="login" />
-            <span>Butterfly Knife</span>
+            <img src="../../assets/logo.png" alt="login" class="logo" />
+            <span>auto report</span>
           </div>
         </el-col>
         <el-col :span="12">
@@ -115,14 +115,14 @@ div.loginContainer {
   height: calc(100vh - 150px);
 }
 div.cardLeft {
-  padding: 230px 180px;
+  padding: 200px 180px;
   text-align: center;
   height: 100%;
 }
 div.cardLeft span {
   display: block;
   font-size: 50px;
-  margin-top: 30px;
+  margin-top: 25px;
 }
 div.cardRight {
   padding: 200px 180px;
@@ -147,5 +147,9 @@ div.tip {
 div.tip:hover {
   cursor: pointer;
   color: #409eff;
+}
+img.logo {
+  width: 60%;
+  height: 60%;
 }
 </style>

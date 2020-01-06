@@ -7,16 +7,17 @@ export default new Vuex.Store({
   state: {
     home: true,
     uploads: false,
-    settings: false
+    mailconfig: false
   },
   mutations: {
     changeActive(state, activeName = "nothing") {
       state.active = {
         home: false,
         uploads: false,
-        settings: false
+        mailconfig: false
       };
       if (activeName != "nothing") state.active[activeName] = true;
+      console.log(state.active)
     }
   },
   actions: {},

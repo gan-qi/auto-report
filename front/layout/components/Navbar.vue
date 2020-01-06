@@ -14,14 +14,14 @@
       <li>
         <router-link
           to="/uploads"
-          :class="{ active: this.$store.state.active.upload }"
+          :class="{ active: this.$store.state.active.uploads }"
           >手动发送</router-link
         >
       </li>
       <li>
         <router-link
           to="/mailconfig"
-          :class="{ active: this.$store.state.active.settings }"
+          :class="{ active: this.$store.state.active.mailconfig }"
           >设置</router-link
         >
       </li>
@@ -41,7 +41,7 @@ export default {
   methods: {
     logout() {
       this.$router.push("/login");
-    },
+    }
   }
 };
 </script>
