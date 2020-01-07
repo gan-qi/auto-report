@@ -41,7 +41,7 @@
               <el-button
                 slot="append"
                 icon="el-icon-check"
-                @click="editTask(item.title)"
+                @click="editTask2(item)"
               />
             </el-input>
           </div>
@@ -104,6 +104,8 @@
 </template>
 
 <script>
+import { getTask, addTask, deleteTask, changeTask } from "../../api/task.js";
+
 export default {
   name: "home",
   components: {},
@@ -198,17 +200,21 @@ export default {
     addTask() {
       // 添加任务
       if (this.input != "") {
-        this.lists.push({
-          title: this.input,
-          time: this.getCurrentTime(),
-          status: false,
-          edit: false
+        var data = {
+          title: this.input
+        };
+        addTask(data).then(() => {
+          this.lists.push({
+            title: this.input,
+            status: false,
+            edit: false
+          });
+          this.$message({
+            message: `哦豁?!你刚刚立下Flag: ${this.input}`,
+            type: "success"
+          });
+          this.input = "";
         });
-        this.$message({
-          message: `哦豁?!你刚刚立下Flag: ${this.input}`,
-          type: "success"
-        });
-        this.input = "";
       } else {
         this.$message({
           message: "所添加的任务不可为空 !",
@@ -218,22 +224,32 @@ export default {
     },
     finishTask(task) {
       // 完成任务, 转换任务的status
-      this.lists.forEach(item => {
-        if (item == task) item.status = true;
-      });
-      this.$message({
-        message: "哦豁?! 奖励一个棒棒糖!",
-        type: "success"
-      });
+      if (!task.status) {
+        var toServerTask = task;
+        toServerTask.status = true;
+        changeTask(task.id, toServerTask).then(() => {
+          this.lists.forEach(item => {
+            if (item == task) item.status = true;
+          });
+          this.$message({
+            message: "哦豁?! 奖励一个棒棒糖!",
+            type: "success"
+          });
+        });
+      } else {
+        this.$message("拜托～棒棒糖还我先...");
+      }
     },
     deleteTask(task) {
       // 删除任务
-      for (let i = 0; i < this.lists.length; i++) {
-        if (this.lists[i] == task) {
-          this.lists.splice(i, 1);
-          this.$message("你居然违背了你立下的Flag...");
+      deleteTask(task.id).then(() => {
+        for (let i = 0; i < this.lists.length; i++) {
+          if (this.lists[i] == task) {
+            this.lists.splice(i, 1);
+            this.$message("你居然违背了你立下的Flag...");
+          }
         }
-      }
+      });
     },
     addExtImg() {
       // 添加额外的图片
@@ -247,14 +263,31 @@ export default {
       // 提交日报表
       this.submitReportBtn = true;
     },
-    editTask(task) {
+    editTask(title) {
       // 开启编辑任务
       this.lists.forEach((item, index) => {
-        if (item.title === task) {
-          this.lists[index].edit = !this.lists[index].edit
+        if (item.title === title) {
+          this.lists[index].edit = !this.lists[index].edit;
         }
-      })
+      });
+    },
+    editTask2(task) {
+      // 除了更改编辑状态，还要和后端同步数据
+      this.editTask(task.title);
+      changeTask(task.id, task).then(() => {
+        this.$message({
+          message: "偷偷改一下Flag..."
+        });
+      });
+    },
+    fetchData() {
+      getTask().then(response => {
+        this.lists = response.data;
+      });
     }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>
