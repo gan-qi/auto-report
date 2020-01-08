@@ -17,7 +17,6 @@ export default new Vuex.Store({
         mailconfig: false
       };
       if (activeName != "nothing") state.active[activeName] = true;
-      console.log(state.active);
     }
   },
   actions: {},

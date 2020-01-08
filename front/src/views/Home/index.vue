@@ -203,18 +203,22 @@ export default {
         var data = {
           title: this.input
         };
-        addTask(data).then(() => {
-          this.lists.push({
-            title: this.input,
-            status: false,
-            edit: false
+        addTask(data)
+          .then(() => {
+            this.lists.push({
+              title: this.input,
+              status: false,
+              edit: false
+            });
+            this.$message({
+              message: `哦豁?!你刚刚立下Flag: ${this.input}`,
+              type: "success"
+            });
+            this.input = "";
+          })
+          .catch(() => {
+            this.$message.error("好像出了点错，你去找写代码的问问吧...");
           });
-          this.$message({
-            message: `哦豁?!你刚刚立下Flag: ${this.input}`,
-            type: "success"
-          });
-          this.input = "";
-        });
       } else {
         this.$message({
           message: "所添加的任务不可为空 !",
@@ -227,29 +231,37 @@ export default {
       if (!task.status) {
         var toServerTask = task;
         toServerTask.status = true;
-        changeTask(task.id, toServerTask).then(() => {
-          this.lists.forEach(item => {
-            if (item == task) item.status = true;
+        changeTask(task.id, toServerTask)
+          .then(() => {
+            this.lists.forEach(item => {
+              if (item == task) item.status = true;
+            });
+            this.$message({
+              message: "哦豁?! 奖励一个棒棒糖!",
+              type: "success"
+            });
+          })
+          .catch(() => {
+            this.$message.error("好像出了点错，你去找写代码的问问吧...");
           });
-          this.$message({
-            message: "哦豁?! 奖励一个棒棒糖!",
-            type: "success"
-          });
-        });
       } else {
-        this.$message("拜托～棒棒糖还我先...");
+        this.$message("拜托～要不棒棒糖还我先...");
       }
     },
     deleteTask(task) {
       // 删除任务
-      deleteTask(task.id).then(() => {
-        for (let i = 0; i < this.lists.length; i++) {
-          if (this.lists[i] == task) {
-            this.lists.splice(i, 1);
-            this.$message("你居然违背了你立下的Flag...");
+      deleteTask(task.id)
+        .then(() => {
+          for (let i = 0; i < this.lists.length; i++) {
+            if (this.lists[i] == task) {
+              this.lists.splice(i, 1);
+              this.$message("你居然违背了你立下的Flag...");
+            }
           }
-        }
-      });
+        })
+        .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
+        });
     },
     addExtImg() {
       // 添加额外的图片
@@ -274,16 +286,24 @@ export default {
     editTask2(task) {
       // 除了更改编辑状态，还要和后端同步数据
       this.editTask(task.title);
-      changeTask(task.id, task).then(() => {
-        this.$message({
-          message: "偷偷改一下Flag..."
+      changeTask(task.id, task)
+        .then(() => {
+          this.$message({
+            message: "偷偷改一下Flag..."
+          });
+        })
+        .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
         });
-      });
     },
     fetchData() {
-      getTask().then(response => {
-        this.lists = response.data;
-      });
+      getTask()
+        .then(response => {
+          this.lists = response.data;
+        })
+        .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
+        });
     }
   },
   created() {

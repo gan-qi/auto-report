@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import { getConfig, mailConfig } from "../../api/mailConfig";
+
 export default {
   data() {
     return {
@@ -54,13 +56,23 @@ export default {
           { required: true, message: "请输入收件人姓名", trigger: "blur" }
         ],
         fromEmail: [
-          { required: true, message: "请输入发送邮箱地址", trigger: "blur" }
+          { required: true, message: "请输入发送邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
         ],
         fromEmailKey: [
           { required: true, message: "请输入发件邮箱密令", trigger: "blur" }
         ],
         toEmail: [
-          { required: true, message: "请输入收件人邮箱地址", trigger: "blur" }
+          { required: true, message: "请输入收件人邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
         ]
       }
     };
@@ -69,15 +81,36 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message({
-            message: "保存成功",
-            type: "success"
-          });
+          var data = {
+            fromName: this.ruleForm.fromName,
+            toName: this.ruleForm.toName,
+            fromEmail: this.ruleForm.fromEmail,
+            fromEmailKey: this.ruleForm.fromEmailKey,
+            toEmail: this.ruleForm.toEmail
+          };
+          mailConfig(data)
+            .then(() => {
+              this.$message({
+                message: "很好.../鼓掌/鼓掌/鼓掌",
+                type: "success"
+              });
+            })
+            .catch(() => {
+              this.$message.error("好像出了点错，你去找写代码的问问吧...");
+            });
         } else {
           return false;
         }
       });
+    },
+    fetchData() {
+      getConfig().then(response => {
+        this.ruleForm = response.data;
+      });
     }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>
