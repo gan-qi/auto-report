@@ -4,7 +4,7 @@
       <el-upload
         class="upload-demo"
         drag
-        action="..."
+        action="http://localhost:5000/uploads"
         :before-upload="beforeUpload"
         :on-success="handleReportSuccess"
       >
@@ -31,17 +31,17 @@ export default {
         type: "success"
       });
     },
-    beforeUpload() {
-      const isJPG = file.type === "image/jpeg";
+    beforeUpload(file) {
+      const isXLSX = file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
+      if (!isXLSX) {
         this.$message.error("上传文件只能是 XLSX 格式!");
       }
       if (!isLt2M) {
         this.$message.error("上传文件大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return isXLSX && isLt2M;
     }
   }
 };
