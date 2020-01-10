@@ -28,7 +28,14 @@
       <span class="right">
         <li>
           <a class="avatar">
-            <p class="username">Username</p>
+            <el-dropdown class="avatar">
+              <span> username<i class="el-icon-arrow-down avatar"></i> </span>
+              <el-dropdown-menu slot="dropdown">
+                <div @click="logout">
+                  <el-dropdown-item>登出</el-dropdown-item>
+                </div>
+              </el-dropdown-menu>
+            </el-dropdown>
           </a>
         </li>
       </span>
@@ -72,7 +79,7 @@ li a {
   text-decoration: none;
   color: #606266;
 }
-li a:not(.imgLogo):not(.avatar) {
+li a:not(.imgLogo) {
   padding: 24px 16px;
 }
 

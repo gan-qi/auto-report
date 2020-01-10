@@ -118,32 +118,37 @@ export default {
       submitReportBtn: false,
       lists: [
         {
+          id: 1,
           title: "task1",
-          time: "2019-01-06 19:54:12",
+          time: "2019-01-06",
           status: false,
           edit: false
         },
         {
+          id: 2,
           title: "task2",
-          time: "2019-01-06 19:54:12",
+          time: "2019-01-06",
           status: true,
           edit: false
         },
         {
+          id: 3,
           title: "task3",
-          time: "2019-01-06 19:54:12",
+          time: "2019-01-06",
           status: false,
           edit: false
         },
         {
+          id: 4,
           title: "task4",
-          time: "2019-01-06 19:54:12",
+          time: "2019-01-06",
           status: false,
           edit: false
         },
         {
+          id: 5,
           title: "task5",
-          time: "2019-01-06 19:54:12",
+          time: "2019-01-06",
           status: false,
           edit: false
         }
@@ -204,8 +209,9 @@ export default {
           title: this.input
         };
         addTask(data)
-          .then(() => {
+          .then(response => {
             this.lists.push({
+              id: response.data,
               title: this.input,
               status: false,
               edit: false
@@ -245,7 +251,7 @@ export default {
             this.$message.error("好像出了点错，你去找写代码的问问吧...");
           });
       } else {
-        this.$message("拜托～要不棒棒糖还我先...");
+        this.$message("拜托～要不棒棒糖还我先...?!");
       }
     },
     deleteTask(task) {

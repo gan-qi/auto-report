@@ -86,10 +86,12 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // 监听登陆状态
+  /*
   if (to.meta.title) {
     document.title = `${to.meta.title} - auto-report`;
     if (to.name == "home") document.title = "auto-report";
   }
+  */
 
   // 每次路由变化时候，关闭所有高亮
   store.commit("changeActive");
@@ -100,5 +102,10 @@ router.beforeEach((to, from, next) => {
 
   next();
 });
+
+export function resetRouter() {
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
+}
 
 export default router;

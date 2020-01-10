@@ -20,17 +20,23 @@
                 ></el-input>
               </el-form-item>
               <el-form-item prop="password">
-                <el-input
-                  v-model="form.password"
-                  type="password"
-                  placeholder="密码"
-                ></el-input>
+                <span @keyup.enter="submitForm('ruleForm')">
+                  <el-input
+                    v-model="form.password"
+                    type="password"
+                    placeholder="密码"
+                  ></el-input>
+                </span>
+              </el-form-item>
+              <el-form-item>
+                <el-checkbox v-model="form.checked">记住我</el-checkbox>
               </el-form-item>
               <el-form-item>
                 <el-button
                   type="primary"
                   @click="submitForm('ruleForm')"
                   class="loginBtn"
+                  :loading="loading"
                 >
                   登 陆
                 </el-button>
@@ -50,9 +56,11 @@
 export default {
   data() {
     return {
+      loading: false,
       form: {
         name: "",
-        password: ""
+        password: "",
+        checked: false
       },
       rules: {
         name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -61,19 +69,26 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          if (this.form.name === "admin" && this.form.password === "admin") {
-            this.$store.commit("changeLoginStatus");
-            this.$router.push("/");
-          } else {
-            this.$message.error("抱歉，登陆失败...");
-          }
-        } else {
-          return false;
-        }
-      });
+    submitForm(valid) {
+      console.log("1111");
+      if (valid) {
+        console.log("22222");
+        this.loading = true;
+        console.log("3333");
+        this.$store
+          .dispatch("user/login", this.form)
+          .then(() => {
+            this.$router.push({ path: this.redirect || "/" });
+            this.loading = false;
+            console.log("heihei");
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      } else {
+        console.log("error submit!!");
+        return false;
+      }
     },
     register() {
       this.$router.push("/register");
@@ -121,7 +136,6 @@ div.cardRight span {
 }
 .loginBtn {
   width: 100%;
-  margin-top: 20px;
 }
 div.tip {
   font-size: 15px;
@@ -132,7 +146,7 @@ div.tip:hover {
   color: #409eff;
 }
 img.logo {
-  width: 60%;
-  height: 60%;
+  width: 50%;
+  height: 50%;
 }
 </style>
