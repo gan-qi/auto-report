@@ -72,8 +72,9 @@
             @click="addExtImg"
             :loading="addImgBtn"
             :disabled="lists.length === 0"
-            >添加图片</el-button
           >
+            添加图片
+          </el-button>
         </el-col>
         <el-col :span="8">
           <el-button
@@ -83,8 +84,9 @@
             @click="downloadReport"
             :loading="downloadReportBtn"
             :disabled="lists.length === 0"
-            >下载日报表</el-button
           >
+            下载日报表
+          </el-button>
         </el-col>
         <el-col :span="8">
           <el-button
@@ -94,8 +96,9 @@
             @click="submitReport"
             :loading="submitReportBtn"
             :disabled="lists.length === 0"
-            >提交报表</el-button
           >
+            提交报表
+          </el-button>
         </el-col>
       </el-row>
     </div>
@@ -105,6 +108,7 @@
 
 <script>
 import { getTask, addTask, deleteTask, changeTask } from "../../api/task.js";
+import { downloadFile } from "@/api/download.js";
 
 export default {
   name: "home",
@@ -159,13 +163,9 @@ export default {
     getCurrentTime() {
       // 获取时间并且返回
       var date = new Date();
-
       this.year = date.getFullYear();
-
       this.month = date.getMonth() + 1;
-
       this.date = date.getDate();
-
       this.day = new Array(
         "星期日",
         "星期一",
@@ -175,16 +175,12 @@ export default {
         "星期五",
         "星期六"
       )[date.getDay()];
-
       this.hour =
         date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-
       this.minute =
         date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-
       this.second =
         date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
       var currentTime =
         "现在是:" +
         this.year +
@@ -276,6 +272,21 @@ export default {
     downloadReport() {
       // 下载日报表
       this.downloadReportBtn = true;
+      downloadFile().then(res => {
+        const blob = new Blob([res.data]);
+        let url = window.URL.createObjectURL(blob);
+
+        //创建一个a标签元素，设置下载属性，点击下载，最后移除该元素
+        let link = document.createElement("a");
+        link.href = url;
+        link.style.display = "none";
+        //res.headers.fileName 取出后台返回下载的文件名
+        // const downlaodFileName = decodeURIComponent(res.headers.filename);
+        const downlaodFileName = decodeURIComponent('test.xlsx');
+        link.setAttribute("download", downlaodFileName);
+        link.click();
+        window.URL.revokeObjectURL(url);
+      });
     },
     submitReport() {
       // 提交日报表
