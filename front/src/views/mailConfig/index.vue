@@ -13,14 +13,14 @@
         <el-form-item label="发件人姓名" required prop="fromName">
           <el-input v-model="ruleForm.fromName"></el-input>
         </el-form-item>
-        <el-form-item label="收件人姓名" required prop="toName">
-          <el-input v-model="ruleForm.toName"></el-input>
-        </el-form-item>
         <el-form-item label="发送邮箱" required prop="fromEmail">
           <el-input v-model="ruleForm.fromEmail"></el-input>
         </el-form-item>
         <el-form-item label="发送邮箱密令" required prop="fromEmailKey">
           <el-input v-model="ruleForm.fromEmailKey"></el-input>
+        </el-form-item>
+        <el-form-item label="收件人姓名" required prop="toName">
+          <el-input v-model="ruleForm.toName"></el-input>
         </el-form-item>
         <el-form-item label="收件人邮箱" required prop="toEmail">
           <el-input v-model="ruleForm.toEmail"></el-input>
@@ -121,5 +121,6 @@ export default {
 }
 .box-card {
   padding: 50px 60px;
+  min-width: 500px;
 }
 </style>

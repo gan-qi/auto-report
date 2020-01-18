@@ -5,7 +5,7 @@
         <el-col :span="12">
           <div class="cardLeft">
             <img src="../../assets/logo.png" alt="login" class="logo" />
-            <span>auto report</span>
+            <span>Auto Report</span>
           </div>
         </el-col>
         <el-col :span="12">
@@ -13,24 +13,20 @@
             <span>登陆</span>
             <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item prop="name" required>
-                <el-input
-                  v-model="form.name"
-                  placeholder="用户名"
-                  v-focus
-                ></el-input>
+                <el-input v-model="form.name" placeholder="用户名" v-focus />
               </el-form-item>
-              <el-form-item prop="password">
+              <el-form-item prop="password" required>
                 <span @keyup.enter="submitForm('ruleForm')">
                   <el-input
                     v-model="form.password"
                     type="password"
                     placeholder="密码"
-                  ></el-input>
+                  />
                 </span>
               </el-form-item>
-              <el-form-item>
+              <!-- <el-form-item>
                 <el-checkbox v-model="form.checked">记住我</el-checkbox>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item>
                 <el-button
                   type="primary"
@@ -40,9 +36,9 @@
                 >
                   登 陆
                 </el-button>
-                <div class="tip" @click="register">
+                <!-- <div class="tip" @click="register">
                   还没账号？注册
-                </div>
+                </div> -->
               </el-form-item>
             </el-form>
           </div>
@@ -70,14 +66,12 @@ export default {
   },
   methods: {
     submitForm(valid) {
-      console.log("1111");
       if (valid) {
-        console.log("22222");
         this.loading = true;
-        console.log("3333");
         this.$store
           .dispatch("user/login", this.form)
           .then(() => {
+            console.log("eeeeeeeeeeeeeee");
             this.$router.push({ path: this.redirect || "/" });
             this.loading = false;
             console.log("heihei");
@@ -106,14 +100,15 @@ export default {
 
 <style scoped>
 div.loginContainer {
-  padding: 50px 200px;
+  padding: 100px 300px;
   border-radius: 40px;
 }
 .boxCard {
-  height: calc(100vh - 150px);
+  /* height: calc(100vh - 150px); */
+  min-height: 600px;
 }
 div.cardLeft {
-  padding: 200px 180px;
+  padding: 180px 180px;
   text-align: center;
   height: 100%;
 }
@@ -123,7 +118,7 @@ div.cardLeft span {
   margin-top: 25px;
 }
 div.cardRight {
-  padding: 230px 180px;
+  padding: 180px 180px;
   border: none;
   border-left: 1px solid #dcdfe6;
   height: 100%;

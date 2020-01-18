@@ -32,7 +32,9 @@ export default {
       });
     },
     beforeUpload(file) {
-      const isXLSX = file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      const isXLSX =
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isXLSX) {

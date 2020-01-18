@@ -7,21 +7,15 @@
         </a>
       </li>
       <li>
-        <router-link to="/" :class="{ active: this.$store.state.active.home }"
-          >首页</router-link
-        >
+        <router-link to="/" :class="{ active: active.home }">首页</router-link>
       </li>
       <li>
-        <router-link
-          to="/uploads"
-          :class="{ active: this.$store.state.active.uploads }"
+        <router-link to="/uploads" :class="{ active: active.uploads }"
           >手动发送</router-link
         >
       </li>
       <li>
-        <router-link
-          to="/mailconfig"
-          :class="{ active: this.$store.state.active.mailconfig }"
+        <router-link to="/mailconfig" :class="{ active: active.mailconfig }"
           >设置</router-link
         >
       </li>
@@ -45,10 +39,31 @@
 
 <script>
 export default {
+  data() {
+    return {
+      active: {
+        home: true,
+        uploads: false,
+        mailconfig: false
+      }
+    };
+  },
   methods: {
     logout() {
       this.$router.push("/login");
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (this.$store.state.active.home) {
+      this.active.home = true;
+    }
+    if (this.$store.state.active.uploads) {
+      this.active.uploads = true;
+    }
+    if (this.$store.state.active.mailconfig) {
+      this.active.mailconfig = true;
+    }
+    next();
   }
 };
 </script>
@@ -57,10 +72,12 @@ export default {
 div.bg {
   background-color: white;
 }
+
 img.imgLogo {
   width: 32px;
   height: 32px;
 }
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -68,6 +85,7 @@ ul {
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
+
 li {
   float: left;
 }
@@ -79,6 +97,7 @@ li a {
   text-decoration: none;
   color: #606266;
 }
+
 li a:not(.imgLogo) {
   padding: 24px 16px;
 }
@@ -91,13 +110,16 @@ li a:hover {
 li a:hover:not(.avatar):not(.imgLogo):not(.active) {
   background-color: #f2f2f2;
 }
+
 li a.active {
   color: #303133;
   background-color: #f2f2f2;
 }
+
 .right {
   float: right;
 }
+
 a.avatar {
   padding: 8px 16px;
 }

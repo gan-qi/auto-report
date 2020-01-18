@@ -112,10 +112,11 @@ div.loginContainer {
   border-radius: 40px;
 }
 .boxCard {
-  height: calc(100vh - 150px);
+  /* height: calc(100vh - 150px); */
+  min-height: 800px;
 }
 div.cardLeft {
-  padding: 200px 180px;
+  padding: 150px 180px;
   text-align: center;
   height: 100%;
 }
@@ -125,7 +126,7 @@ div.cardLeft span {
   margin-top: 25px;
 }
 div.cardRight {
-  padding: 200px 180px;
+  padding: 150px 180px;
   border: none;
   border-left: 1px solid #dcdfe6;
   height: 100%;

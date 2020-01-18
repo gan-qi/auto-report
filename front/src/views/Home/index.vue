@@ -64,7 +64,7 @@
     <!--提交按钮-->
     <div class="footerBtn">
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="6">
           <el-button
             type="primary"
             class="optionBtn"
@@ -76,7 +76,19 @@
             添加图片
           </el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-button
+            type="warning"
+            class="optionBtn"
+            icon="el-icon-chat-line-square"
+            @click="addComment"
+            :loading="addCommentBtn"
+            :disabled="lists.length === 0"
+          >
+            建议/需要帮助
+          </el-button>
+        </el-col>
+        <el-col :span="6">
           <el-button
             type="info"
             class="optionBtn"
@@ -88,7 +100,7 @@
             下载日报表
           </el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-button
             type="success"
             class="optionBtn"
@@ -109,6 +121,7 @@
 <script>
 import { getTask, addTask, deleteTask, changeTask } from "../../api/task.js";
 import { downloadFile } from "@/api/download.js";
+import { sendMail } from "@/api/sendMail.js";
 
 export default {
   name: "home",
@@ -118,6 +131,7 @@ export default {
       input: "",
       loading: false,
       addImgBtn: false,
+      addCommentBtn: false,
       downloadReportBtn: false,
       submitReportBtn: false,
       lists: [
@@ -269,6 +283,10 @@ export default {
       // 添加额外的图片
       this.$message("功能暂未开发...");
     },
+    addComment() {
+      // 留言或者需要帮助
+      this.$message("功能暂未开发...");
+    },
     downloadReport() {
       // 下载日报表
       this.downloadReportBtn = true;
@@ -282,15 +300,28 @@ export default {
         link.style.display = "none";
         //res.headers.fileName 取出后台返回下载的文件名
         // const downlaodFileName = decodeURIComponent(res.headers.filename);
-        const downlaodFileName = decodeURIComponent('test.xlsx');
+        const downlaodFileName = decodeURIComponent("日报表.xlsx");
         link.setAttribute("download", downlaodFileName);
         link.click();
         window.URL.revokeObjectURL(url);
+        // 取消加载状态
+        this.downloadReportBtn = false;
       });
     },
     submitReport() {
       // 提交日报表
       this.submitReportBtn = true;
+      sendMail()
+        .then(() => {
+          this.$message({
+            message: "下班咯~~~~~~",
+            type: "success"
+          });
+          this.submitReportBtn = false;
+        })
+        .catch(() => {
+          this.$message.error("好像除了点问题，下载日报表手动上传试试呢...");
+        });
     },
     editTask(title) {
       // 开启编辑任务

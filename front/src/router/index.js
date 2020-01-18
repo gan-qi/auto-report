@@ -58,15 +58,15 @@ const routes = [
       first: true
     }
   },
-  {
-    path: "/register",
-    name: "Register",
-    component: () => import("../views/Register/index"),
-    meta: {
-      title: "登陆",
-      first: true
-    }
-  },
+  // {
+  //   path: "/register",
+  //   name: "Register",
+  //   component: () => import("../views/Register/index"),
+  //   meta: {
+  //     title: "注册",
+  //     first: true
+  //   }
+  // },
   {
     path: "/404",
     component: () => import("../views/NotFoundPage/index")
@@ -86,12 +86,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // 监听登陆状态
-  /*
   if (to.meta.title) {
-    document.title = `${to.meta.title} - auto-report`;
-    if (to.name == "home") document.title = "auto-report";
+    document.title = `${to.meta.title} - Auto Report`;
+    if (to.name == "Home") document.title = "Auto Report";
   }
-  */
 
   // 每次路由变化时候，关闭所有高亮
   store.commit("changeActive");
