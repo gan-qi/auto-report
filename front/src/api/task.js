@@ -1,35 +1,39 @@
 import request from "@/utils/request";
 
-export function getTask() {
+export function getTask(token) {
   return request({
     url: "/task",
     method: "get",
-    headers: { "content-type": "application/x-www-form-urlencoded" }
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    params: { token }
   });
 }
 
-export function addTask(data) {
+export function addTask(data, token) {
   return request({
     url: "/task",
     method: "post",
     headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: data
+    data: data,
+    params: { token }
   });
 }
 
-export function deleteTask(taskid) {
+export function deleteTask(taskid, token) {
   return request({
     url: `/task/${taskid}`,
     method: "delete",
-    headers: { "content-type": "application/x-www-form-urlencoded" }
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    params: { token }
   });
 }
 
-export function changeTask(taskid, data) {
+export function changeTask(taskid, data, token) {
   return request({
     url: `/task/${taskid}`,
     method: "post",
     headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: data
+    data: data,
+    params: { token }
   });
 }

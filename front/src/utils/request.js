@@ -3,9 +3,8 @@ import { MessageBox, Message } from "element-ui";
 
 // create an axios instance
 const service = axios.create({
-  //baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  //baseURL: 'http://localhost:5000',
-  baseURL: "http://192.168.1.107:5000",
+  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: "http://192.168.1.200:5000",
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 });

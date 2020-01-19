@@ -10,7 +10,7 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
 import "@/icons";
-// import "@/permission"
+import "@/permission";
 
 Vue.use(ElementUI);
 

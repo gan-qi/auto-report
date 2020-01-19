@@ -218,7 +218,7 @@ export default {
         var data = {
           title: this.input
         };
-        addTask(data)
+        addTask(data, this.$store.getters.token)
           .then(response => {
             this.lists.push({
               id: response.data,
@@ -266,7 +266,7 @@ export default {
     },
     deleteTask(task) {
       // 删除任务
-      deleteTask(task.id)
+      deleteTask(task.id, this.$store.getters.token)
         .then(() => {
           for (let i = 0; i < this.lists.length; i++) {
             if (this.lists[i] == task) {
@@ -334,7 +334,7 @@ export default {
     editTask2(task) {
       // 除了更改编辑状态，还要和后端同步数据
       this.editTask(task.title);
-      changeTask(task.id, task)
+      changeTask(task.id, task, this.$store.getters.token)
         .then(() => {
           this.$message({
             message: "偷偷改一下Flag..."
@@ -345,7 +345,7 @@ export default {
         });
     },
     fetchData() {
-      getTask()
+      getTask(this.$store.getters.token)
         .then(response => {
           this.lists = response.data;
         })

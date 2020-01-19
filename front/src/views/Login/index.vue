@@ -12,10 +12,14 @@
           <div class="cardRight">
             <span>登陆</span>
             <el-form ref="ruleForm" :model="form" :rules="rules">
-              <el-form-item prop="name" required>
-                <el-input v-model="form.name" placeholder="用户名" v-focus />
+              <el-form-item prop="username">
+                <el-input
+                  v-model="form.username"
+                  placeholder="用户名"
+                  v-focus
+                />
               </el-form-item>
-              <el-form-item prop="password" required>
+              <el-form-item prop="password">
                 <span @keyup.enter="submitForm('ruleForm')">
                   <el-input
                     v-model="form.password"
@@ -54,39 +58,41 @@ export default {
     return {
       loading: false,
       form: {
-        name: "",
+        username: "",
         password: "",
         checked: false
       },
       rules: {
-        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" }
+        ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
   methods: {
-    submitForm(valid) {
-      if (valid) {
-        this.loading = true;
-        this.$store
-          .dispatch("user/login", this.form)
-          .then(() => {
-            console.log("eeeeeeeeeeeeeee");
-            this.$router.push({ path: this.redirect || "/" });
-            this.loading = false;
-            console.log("heihei");
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      } else {
-        console.log("error submit!!");
-        return false;
-      }
-    },
-    register() {
-      this.$router.push("/register");
+    submitForm() {
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          this.$store
+            .dispatch("user/login", this.form)
+            .then(() => {
+              this.$router.push({ path: this.redirect || "/" });
+              this.loading = false;
+            })
+            .catch(() => {
+              this.loading = false;
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     }
+    // register() {
+    //   this.$router.push("/register");
+    // }
   },
   directives: {
     focus: {

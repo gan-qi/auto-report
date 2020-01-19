@@ -1,12 +1,12 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
-import store from "../store/index";
+import Router from "vue-router";
+// import store from "../store/index";
 
 import Layout from "../../layout/index.vue";
 
-Vue.use(VueRouter);
+Vue.use(Router);
 
-const routes = [
+const constantRoutes = [
   {
     path: "/",
     component: Layout,
@@ -78,28 +78,37 @@ const routes = [
   }
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
-});
+// const router = new VueRouter({
+//   mode: "history",
+//   base: process.env.BASE_URL,
+//   routes
+// });
 
-router.beforeEach((to, from, next) => {
-  // 监听登陆状态
-  if (to.meta.title) {
-    document.title = `${to.meta.title} - Auto Report`;
-    if (to.name == "Home") document.title = "Auto Report";
-  }
+// router.beforeEach((to, from, next) => {
+//   // 监听登陆状态
+//   if (to.meta.title) {
+//     document.title = `${to.meta.title} - Auto Report`;
+//     if (to.name == "Home") document.title = "Auto Report";
+//   }
 
-  // 每次路由变化时候，关闭所有高亮
-  store.commit("changeActive");
-  // 当下一个路由在菜单所列路由之内，开启其高亮
-  if (Object.keys(store.state.active).indexOf(to.name.toLowerCase()) != -1) {
-    store.commit("changeActive", to.name.toLowerCase());
-  }
+//   // 每次路由变化时候，关闭所有高亮
+//   store.commit("changeActive");
+//   // 当下一个路由在菜单所列路由之内，开启其高亮
+//   if (Object.keys(store.state.active).indexOf(to.name.toLowerCase()) != -1) {
+//     store.commit("changeActive", to.name.toLowerCase());
+//   }
 
-  next();
-});
+//   next();
+// });
+
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  });
+
+const router = createRouter();
 
 export function resetRouter() {
   const newRouter = createRouter();

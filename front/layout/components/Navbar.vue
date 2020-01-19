@@ -23,7 +23,9 @@
         <li>
           <a class="avatar">
             <el-dropdown class="avatar">
-              <span> username<i class="el-icon-arrow-down avatar"></i> </span>
+              <span>
+                {{ username }}<i class="el-icon-arrow-down avatar"></i>
+              </span>
               <el-dropdown-menu slot="dropdown">
                 <div @click="logout">
                   <el-dropdown-item>登出</el-dropdown-item>
@@ -41,6 +43,7 @@
 export default {
   data() {
     return {
+      username: this.$store.getters.username || "username",
       active: {
         home: true,
         uploads: false,
@@ -49,8 +52,9 @@ export default {
     };
   },
   methods: {
-    logout() {
-      this.$router.push("/login");
+    async logout() {
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     }
   },
   beforeRouteUpdate(to, from, next) {
