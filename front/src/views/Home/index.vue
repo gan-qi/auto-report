@@ -76,7 +76,7 @@
             type="primary"
             class="optionBtn"
             icon="el-icon-picture-outline"
-            @click="addExtImg"
+            @click="dialogchange"
             :loading="addImgBtn"
             :disabled="lists.length === 0"
           >
@@ -122,6 +122,10 @@
       </el-row>
     </div>
     <!--提交按钮 结束-->
+
+    <!-- 设置面板 -->
+    <panel :dialog="dialog" @dialogchange="dialogchange" :advice="advice" />
+    <!-- 设置面板 结束 -->
   </div>
 </template>
 
@@ -129,10 +133,13 @@
 import { getTask, addTask, deleteTask, changeTask } from "../../api/task.js";
 import { downloadFile } from "@/api/download.js";
 import { sendMail } from "@/api/sendMail.js";
+import panel from "./panel";
 
 export default {
   name: "home",
-  components: {},
+  components: {
+    panel
+  },
   data() {
     return {
       input: "",
@@ -149,7 +156,9 @@ export default {
         //   status: 0, // 0 未完成 1 已完成 2 进行中
         //   edit: false
         // }
-      ]
+      ],
+      dialog: false,
+      advice: ""
     };
   },
   methods: {
@@ -175,20 +184,7 @@ export default {
       this.second =
         date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
       var currentTime =
-        "现在是:" +
-        this.year +
-        "年" +
-        this.month +
-        "月" +
-        this.date +
-        "日 " +
-        this.hour +
-        ":" +
-        this.minute +
-        ":" +
-        this.second +
-        " " +
-        this.day;
+        "现在是:" + this.year + "年" + this.month + "月" + this.date + "日 ";
       return currentTime;
     },
     addTask() {
@@ -331,6 +327,9 @@ export default {
         .catch(() => {
           this.$message.error("好像出了点错，你去找写代码的问问吧...");
         });
+    },
+    dialogchange(val) {
+      this.dialog = val;
     }
   },
   created() {
