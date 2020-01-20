@@ -4,7 +4,7 @@
       <el-upload
         class="upload-demo"
         drag
-        action="http://localhost:5000/uploads"
+        :action="action"
         :before-upload="beforeUpload"
         :on-success="handleReportSuccess"
       >
@@ -22,7 +22,10 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      action:
+        "http://192.168.1.200:5000/uploads?token=" + this.$store.getters.token
+    };
   },
   methods: {
     handleReportSuccess() {

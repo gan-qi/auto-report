@@ -1,9 +1,10 @@
 import request from "@/utils/request";
 
-export function downloadFile() {
+export function downloadFile(token) {
   return request({
     url: "/outputfile",
     method: "get",
-    responseType: "blob"
+    responseType: "blob",
+    params: { token }
   });
 }

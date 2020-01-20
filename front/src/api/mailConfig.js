@@ -1,18 +1,20 @@
 import request from "@/utils/request";
 
-export function getConfig() {
+export function getConfig(token) {
   return request({
     url: "/mailconfig",
     method: "get",
-    headers: { "content-type": "application/x-www-form-urlencoded" }
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    params: { token }
   });
 }
 
-export function mailConfig(data) {
+export function mailConfig(data, token) {
   return request({
     url: "/mailconfig",
     method: "post",
     headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: data
+    data: data,
+    params: { token }
   });
 }

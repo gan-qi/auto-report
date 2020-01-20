@@ -88,7 +88,7 @@ export default {
             fromEmailKey: this.ruleForm.fromEmailKey,
             toEmail: this.ruleForm.toEmail
           };
-          mailConfig(data)
+          mailConfig(data, this.$store.getters.token)
             .then(() => {
               this.$message({
                 message: "很好.../鼓掌/鼓掌/鼓掌",
@@ -104,7 +104,7 @@ export default {
       });
     },
     fetchData() {
-      getConfig().then(response => {
+      getConfig(this.$store.getters.token).then(response => {
         this.ruleForm = response.data;
       });
     }

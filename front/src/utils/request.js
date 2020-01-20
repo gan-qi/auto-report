@@ -54,11 +54,11 @@ service.interceptors.response.use(
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         // to re-login
         MessageBox.confirm(
-          "You have been logged out, you can cancel to stay on this page, or log in again",
-          "Confirm logout",
+          "抱歉，你的账户已经登出，你可选择取消留在本页面，也可以选择重新登陆。",
+          "账户登出通知",
           {
-            confirmButtonText: "Re-Login",
-            cancelButtonText: "Cancel",
+            confirmButtonText: "重新登陆",
+            cancelButtonText: "取消",
             type: "warning"
           }
         ).then(() => {});

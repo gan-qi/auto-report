@@ -1,9 +1,10 @@
 import request from "@/utils/request";
 
-export function sendMail() {
+export function sendMail(token) {
   return request({
     url: "/submitreport",
     method: "get",
-    headers: { "content-type": "application/x-www-form-urlencoded" }
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    params: { token }
   });
 }

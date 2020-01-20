@@ -25,12 +25,19 @@
     >
       <el-row :gutter="20">
         <el-col :span="2">
-          <div @click="finishTask(item)" class="flag">
-            <span v-if="!item.status">
+          <div
+            @click="finishTask(item, 1)"
+            @click.middle="finishTask(item, 2)"
+            class="flag"
+          >
+            <span v-if="item.status == 0">
               <i class="el-icon-s-flag" />
             </span>
-            <span v-else>
+            <span v-else-if="item.status == 1">
               <i class="el-icon-lollipop" />
+            </span>
+            <span v-else-if="item.status == 2">
+              <i class="el-icon-hot-water" />
             </span>
           </div>
         </el-col>
@@ -135,41 +142,13 @@ export default {
       downloadReportBtn: false,
       submitReportBtn: false,
       lists: [
-        {
-          id: 1,
-          title: "task1",
-          time: "2019-01-06",
-          status: false,
-          edit: false
-        },
-        {
-          id: 2,
-          title: "task2",
-          time: "2019-01-06",
-          status: true,
-          edit: false
-        },
-        {
-          id: 3,
-          title: "task3",
-          time: "2019-01-06",
-          status: false,
-          edit: false
-        },
-        {
-          id: 4,
-          title: "task4",
-          time: "2019-01-06",
-          status: false,
-          edit: false
-        },
-        {
-          id: 5,
-          title: "task5",
-          time: "2019-01-06",
-          status: false,
-          edit: false
-        }
+        // {
+        //   id: 1,
+        //   title: "task1",
+        //   time: "2019-01-06",
+        //   status: 0, // 0 未完成 1 已完成 2 进行中
+        //   edit: false
+        // }
       ]
     };
   },
@@ -242,15 +221,15 @@ export default {
         });
       }
     },
-    finishTask(task) {
+    finishTask(task, val) {
       // 完成任务, 转换任务的status
       if (!task.status) {
         var toServerTask = task;
-        toServerTask.status = true;
-        changeTask(task.id, toServerTask)
+        toServerTask.status = val;
+        changeTask(task.id, toServerTask, this.$store.getters.token)
           .then(() => {
             this.lists.forEach(item => {
-              if (item == task) item.status = true;
+              if (item == task) item.status = val;
             });
             this.$message({
               message: "哦豁?! 奖励一个棒棒糖!",
@@ -290,7 +269,7 @@ export default {
     downloadReport() {
       // 下载日报表
       this.downloadReportBtn = true;
-      downloadFile().then(res => {
+      downloadFile(this.$store.getters.token).then(res => {
         const blob = new Blob([res.data]);
         let url = window.URL.createObjectURL(blob);
 
@@ -311,7 +290,7 @@ export default {
     submitReport() {
       // 提交日报表
       this.submitReportBtn = true;
-      sendMail()
+      sendMail(this.$store.getters.token)
         .then(() => {
           this.$message({
             message: "下班咯~~~~~~",
@@ -320,7 +299,7 @@ export default {
           this.submitReportBtn = false;
         })
         .catch(() => {
-          this.$message.error("好像除了点问题，下载日报表手动上传试试呢...");
+          // this.$message.error("好像除了点问题，下载日报表手动上传试试呢...");
         });
     },
     editTask(title) {
