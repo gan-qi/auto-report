@@ -16,7 +16,7 @@ const constantRoutes = [
         name: "Home",
         component: () => import("../views/Home/index"),
         meta: {
-          title: "home"
+          title: "首页"
         }
       }
     ]

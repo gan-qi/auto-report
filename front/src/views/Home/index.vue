@@ -71,33 +71,21 @@
     <!--提交按钮-->
     <div class="footerBtn">
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="8">
           <el-button
-            type="primary"
+            type="info"
             class="optionBtn"
-            icon="el-icon-picture-outline"
+            icon="el-icon-setting"
             @click="dialogchange"
             :loading="addImgBtn"
             :disabled="lists.length === 0"
           >
-            添加图片
+            其他设置
           </el-button>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-button
-            type="warning"
-            class="optionBtn"
-            icon="el-icon-chat-line-square"
-            @click="addComment"
-            :loading="addCommentBtn"
-            :disabled="lists.length === 0"
-          >
-            建议/需要帮助
-          </el-button>
-        </el-col>
-        <el-col :span="6">
-          <el-button
-            type="info"
+            type="primary"
             class="optionBtn"
             icon="el-icon-download"
             @click="downloadReport"
@@ -107,7 +95,7 @@
             下载日报表
           </el-button>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-button
             type="success"
             class="optionBtn"
@@ -133,7 +121,7 @@
 import { getTask, addTask, deleteTask, changeTask } from "../../api/task.js";
 import { downloadFile } from "@/api/download.js";
 import { sendMail } from "@/api/sendMail.js";
-import panel from "./panel";
+import panel from "./components/panel";
 
 export default {
   name: "home",
