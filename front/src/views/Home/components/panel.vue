@@ -25,7 +25,8 @@
             :auto-upload="false"
           >
             <el-button slot="trigger" size="small" type="primary"
-              >选取文件</el-button
+            >选取文件
+            </el-button
             >
             <div slot="tip" class="el-upload__tip">
               只能上传jpg/png文件，且不超过3MB
@@ -33,7 +34,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="明日任务" :label-width="formLabelWidth">
-          <todo-list />
+          <todo-list/>
         </el-form-item>
       </el-form>
       <div class="drawer__footer">
@@ -46,7 +47,8 @@
               type="primary"
               @click="$refs.drawer.closeDrawer()"
               :loading="loading"
-              >{{ loading ? "提交中 ..." : "提 交" }}</el-button
+            >{{ loading ? "提交中 ..." : "提 交" }}
+            </el-button
             >
           </el-col>
         </el-row>
@@ -108,7 +110,8 @@ export default {
             }, 40);
           }, 200);
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     cancelForm() {
       this.loading = false;
@@ -136,11 +139,13 @@ export default {
 .drawer__content {
   padding: 30px 20px;
 }
+
 .drawer__footer {
   position: absolute;
   bottom: 10px;
   width: 90%;
 }
+
 .drawer__footer button {
   width: 100%;
 }

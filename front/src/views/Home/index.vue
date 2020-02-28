@@ -30,13 +30,13 @@
             @click.middle="finishTask(item, 2)"
             class="flag"
           >
-            <span v-if="item.status == 0">
+            <span v-if="item.status === 0">
               <i class="el-icon-s-flag" />
             </span>
-            <span v-else-if="item.status == 1">
+            <span v-else-if="item.status === 1">
               <i class="el-icon-lollipop" />
             </span>
-            <span v-else-if="item.status == 2">
+            <span v-else-if="item.status === 2">
               <i class="el-icon-hot-water" />
             </span>
           </div>
@@ -118,9 +118,9 @@
 </template>
 
 <script>
-import { getTask, addTask, deleteTask, changeTask } from "../../api/task.js";
-import { downloadFile } from "@/api/download.js";
-import { sendMail } from "@/api/sendMail.js";
+import { addTask, changeTask, deleteTask, getTask } from "../../api/task.js";
+import { downloadFile } from "../../api/download.js";
+import { sendMail } from "../../api/sendMail.js";
 import panel from "./components/panel";
 
 export default {
@@ -190,7 +190,7 @@ export default {
               edit: false
             });
             this.$message({
-              message: `哦豁?!你刚刚立下Flag: ${this.input}`,
+              message: `哦豁?!你刚刚立下Flag: ${ this.input }`,
               type: "success"
             });
             this.input = "";
@@ -254,7 +254,7 @@ export default {
       // 下载日报表
       this.downloadReportBtn = true;
       downloadFile(this.$store.getters.token).then(res => {
-        const blob = new Blob([res.data]);
+        const blob = new Blob([ res.data ]);
         let url = window.URL.createObjectURL(blob);
 
         //创建一个a标签元素，设置下载属性，点击下载，最后移除该元素
@@ -331,37 +331,47 @@ export default {
   margin: 30px 80px;
   padding: 20px 24px;
 }
+
 .container {
   padding: 30px 400px;
 }
+
 .box-card {
   padding: 8px 20px;
   margin: 10px 0;
 }
+
 .flag {
   cursor: pointer;
 }
+
 .hiddenDelete {
   display: none;
   cursor: pointer;
 }
+
 .box-card:hover .hiddenDelete {
   display: block;
 }
+
 .finishIt {
   text-decoration: line-through;
 }
+
 .footerBtn {
   margin-top: 50px;
   text-align: center;
 }
+
 .optionBtn {
   width: 80%;
 }
+
 .box-card:hover {
   position: relative;
   right: 10px;
 }
+
 .nothingTip {
   font-size: 30px;
   color: #909399;

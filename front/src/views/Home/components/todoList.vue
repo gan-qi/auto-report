@@ -69,10 +69,7 @@ export default {
   methods: {
     addTask() {
       // 添加任务
-      if (this.input != "") {
-        var data = {
-          title: this.input
-        };
+      if (this.input !== "") {
         this.lists.push({
           title: this.input,
           status: false,
@@ -93,7 +90,7 @@ export default {
     deleteTask(task) {
       // 删除任务
       for (let i = 0; i < this.lists.length; i++) {
-        if (this.lists[i] == task) {
+        if (this.lists[i] === task) {
           this.lists.splice(i, 1);
           this.$message("你居然违背了你立下的Flag...");
         }
