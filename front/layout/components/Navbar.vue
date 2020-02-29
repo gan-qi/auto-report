@@ -3,21 +3,21 @@
     <ul>
       <li>
         <a class="imgLogo">
-          <img src="@/assets/logo.png" class="imgLogo" />
+          <img src="@/assets/logo.png" class="imgLogo" alt="logo" />
         </a>
       </li>
       <li>
-        <router-link to="/" :class="{ active: active.home }">首页</router-link>
+        <router-link to="/" exact>首页</router-link>
       </li>
       <li>
-        <router-link to="/uploads" :class="{ active: active.uploads }"
-          >手动发送</router-link
-        >
+        <router-link to="/uploads">
+          手动发送
+        </router-link>
       </li>
       <li>
-        <router-link to="/mailconfig" :class="{ active: active.mailconfig }"
-          >设置</router-link
-        >
+        <router-link to="/mailconfig">
+          设置
+        </router-link>
       </li>
       <span class="right">
         <li>
@@ -43,18 +43,13 @@
 export default {
   data() {
     return {
-      username: this.$store.getters.username || "username",
-      active: {
-        home: true,
-        uploads: false,
-        mailconfig: false
-      }
+      username: this.$store.getters.username || "username"
     };
   },
   methods: {
     async logout() {
       await this.$store.dispatch("user/logout");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      await this.$router.push(`/login?redirect=${ this.$route.fullPath }`);
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -111,11 +106,11 @@ li a:hover {
   color: #303133;
 }
 
-li a:hover:not(.avatar):not(.imgLogo):not(.active) {
+li a:hover:not(.avatar):not(.imgLogo) {
   background-color: #f2f2f2;
 }
 
-li a.active {
+.router-link-active {
   color: #303133;
   background-color: #f2f2f2;
 }
