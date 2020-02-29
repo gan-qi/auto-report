@@ -1,10 +1,10 @@
 import axios from "axios";
-import { MessageBox, Message } from "element-ui";
+import { Message, MessageBox } from "element-ui";
 
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: "http://localhost:5000",
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // baseURL: baseUrl,
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 });
@@ -36,7 +36,8 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    if (response.config.url === "/outputfile") {
+    // 由于后端返回文件流无法使用json，故无法携带code，直接让该url返回response
+    if (response.config.url === `${process.env.VUE_APP_BASE_API}/outputfile`) {
       return response;
     }
 
@@ -61,7 +62,8 @@ service.interceptors.response.use(
             cancelButtonText: "取消",
             type: "warning"
           }
-        ).then(() => {});
+        ).then(() => {
+        });
       }
       return Promise.reject(new Error(res.message || "Error"));
     } else {

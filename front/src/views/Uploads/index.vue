@@ -23,8 +23,7 @@
 export default {
   data() {
     return {
-      action:
-        "http://192.168.1.200:5000/uploads?token=" + this.$store.getters.token
+      action: `${ process.env.VUE_APP_BASE_API }/uploads?token=${ this.$store.getters.token }`
     };
   },
   methods: {
@@ -57,10 +56,12 @@ div.uploadsContainer {
   text-align: center;
   padding: 30px;
 }
+
 .box-card {
   margin: 100px calc(100vh - 300px);
   padding: 50px 40px;
 }
+
 .el-upload__tip {
   margin-top: 15px;
 }

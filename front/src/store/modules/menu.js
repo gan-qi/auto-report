@@ -11,7 +11,7 @@ const mutations = {
       uploads: false,
       mailconfig: false
     };
-    if (activeName != "nothing") state.active[activeName] = true;
+    if (activeName !== "nothing") state.active[activeName] = true;
   }
 };
 

@@ -4592,6 +4592,11 @@ js-cookie@^2.2.1:
   resolved "https://registry.npm.taobao.org/js-cookie/download/js-cookie-2.2.1.tgz?cache=0&sync_timestamp=1576845736524&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fjs-cookie%2Fdownload%2Fjs-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
   integrity sha1-aeEG3F1YBolFYpAqpbrsN0Tpsrg=
 
+js-file-download@^0.4.10:
+  version "0.4.10"
+  resolved "https://registry.npm.taobao.org/js-file-download/download/js-file-download-0.4.10.tgz#016ece060121cabc611b0f95aab64df63ba55071"
+  integrity sha1-AW7OBgEhyrxhGw+VqrZN9julUHE=
+
 js-levenshtein@^1.1.3:
   version "1.1.6"
   resolved "https://registry.npm.taobao.org/js-levenshtein/download/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"

@@ -4,7 +4,7 @@
     <div @keyup.enter="addTask">
       <el-input
         v-model="input"
-        placeholder="添加任务"
+        placeholder="立下flag"
         prefix-icon="el-icon-plus"
         clearable
       >
@@ -76,7 +76,7 @@
             type="info"
             class="optionBtn"
             icon="el-icon-setting"
-            @click="dialogchange"
+            @click="dialog = !dialog"
             :loading="addImgBtn"
             :disabled="lists.length === 0"
           >
@@ -112,7 +112,7 @@
     <!--提交按钮 结束-->
 
     <!-- 设置面板 -->
-    <panel :dialog="dialog" @dialogchange="dialogchange" :advice="advice" />
+    <panel :dialog="dialog" @dialogchange="dialogchange" />
     <!-- 设置面板 结束 -->
   </div>
 </template>
@@ -122,6 +122,7 @@ import { addTask, changeTask, deleteTask, getTask } from "../../api/task.js";
 import { downloadFile } from "../../api/download.js";
 import { sendMail } from "../../api/sendMail.js";
 import panel from "./components/panel";
+import fileDownload from "js-file-download";
 
 export default {
   name: "home",
@@ -145,59 +146,45 @@ export default {
         //   edit: false
         // }
       ],
-      dialog: false,
-      advice: ""
+      dialog: false
     };
   },
   methods: {
-    getCurrentTime() {
-      // 获取时间并且返回
-      var date = new Date();
-      this.year = date.getFullYear();
-      this.month = date.getMonth() + 1;
-      this.date = date.getDate();
-      this.day = new Array(
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六"
-      )[date.getDay()];
-      this.hour =
-        date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-      this.minute =
-        date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-      this.second =
-        date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-      var currentTime =
-        "现在是:" + this.year + "年" + this.month + "月" + this.date + "日 ";
-      return currentTime;
-    },
     addTask() {
       // 添加任务
-      if (this.input != "") {
-        var data = {
-          title: this.input
-        };
-        addTask(data, this.$store.getters.token)
-          .then(response => {
-            this.lists.push({
-              id: response.data,
-              title: this.input,
-              status: false,
-              edit: false
-            });
-            this.$message({
-              message: `哦豁?!你刚刚立下Flag: ${ this.input }`,
-              type: "success"
-            });
-            this.input = "";
-          })
-          .catch(() => {
-            this.$message.error("好像出了点错，你去找写代码的问问吧...");
+      if (this.input !== "") {
+        // 首先检测是否已存在该任务
+        let haven = false;
+        this.lists.forEach(item => {
+          if (item.title === this.input) haven = true;
+        });
+        if (haven) {
+          this.$message({
+            message: "flag已立下，请不要重复立flag !",
+            type: "warning"
           });
+        } else {
+          let data = {
+            title: this.input
+          };
+          addTask(data, this.$store.getters.token)
+            .then(response => {
+              this.lists.push({
+                id: response.data,
+                title: this.input,
+                status: 0,
+                edit: false
+              });
+              this.$message({
+                message: `哦豁?!你刚刚立下Flag: ${this.input}`,
+                type: "success"
+              });
+              this.input = "";
+            })
+            .catch(() => {
+              this.$message.error("好像出了点错，你去找写代码的问问吧...");
+            });
+        }
       } else {
         this.$message({
           message: "所添加的任务不可为空 !",
@@ -208,12 +195,12 @@ export default {
     finishTask(task, val) {
       // 完成任务, 转换任务的status
       if (!task.status) {
-        var toServerTask = task;
+        let toServerTask = task;
         toServerTask.status = val;
         changeTask(task.id, toServerTask, this.$store.getters.token)
           .then(() => {
             this.lists.forEach(item => {
-              if (item == task) item.status = val;
+              if (item === task) item.status = val;
             });
             this.$message({
               message: "哦豁?! 奖励一个棒棒糖!",
@@ -232,9 +219,9 @@ export default {
       deleteTask(task.id, this.$store.getters.token)
         .then(() => {
           for (let i = 0; i < this.lists.length; i++) {
-            if (this.lists[i] == task) {
+            if (this.lists[i] === task) {
               this.lists.splice(i, 1);
-              this.$message("你居然违背了你立下的Flag...");
+              this.$message("趁人不注意赶紧偷偷删掉个Flag...");
             }
           }
         })
@@ -242,33 +229,11 @@ export default {
           this.$message.error("好像出了点错，你去找写代码的问问吧...");
         });
     },
-    addExtImg() {
-      // 添加额外的图片
-      this.$message("功能暂未开发...");
-    },
-    addComment() {
-      // 留言或者需要帮助
-      this.$message("功能暂未开发...");
-    },
     downloadReport() {
       // 下载日报表
       this.downloadReportBtn = true;
-      downloadFile(this.$store.getters.token).then(res => {
-        const blob = new Blob([ res.data ]);
-        let url = window.URL.createObjectURL(blob);
-
-        //创建一个a标签元素，设置下载属性，点击下载，最后移除该元素
-        let link = document.createElement("a");
-        link.href = url;
-        link.style.display = "none";
-        //res.headers.fileName 取出后台返回下载的文件名
-        // const downlaodFileName = decodeURIComponent(res.headers.filename);
-        const downlaodFileName = decodeURIComponent("日报表.xlsx");
-        link.setAttribute("download", downlaodFileName);
-        link.click();
-        window.URL.revokeObjectURL(url);
-        // 取消加载状态
-        this.downloadReportBtn = false;
+      downloadFile(this.$store.getters.token).then(response => {
+        fileDownload(response.data, "日报表.xlsx");
       });
     },
     submitReport() {

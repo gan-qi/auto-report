@@ -16,25 +16,8 @@
             type="textarea"
           ></el-input>
         </el-form-item>
-        <el-form-item label="添加图片" :label-width="formLabelWidth">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            action="..."
-            :file-list="fileList"
-            :auto-upload="false"
-          >
-            <el-button slot="trigger" size="small" type="primary"
-            >选取文件
-            </el-button
-            >
-            <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过3MB
-            </div>
-          </el-upload>
-        </el-form-item>
         <el-form-item label="明日任务" :label-width="formLabelWidth">
-          <todo-list/>
+          <todo-list />
         </el-form-item>
       </el-form>
       <div class="drawer__footer">
@@ -47,9 +30,9 @@
               type="primary"
               @click="$refs.drawer.closeDrawer()"
               :loading="loading"
-            >{{ loading ? "提交中 ..." : "提 交" }}
-            </el-button
             >
+              {{ loading ? "保存中 ..." : "保 存" }}
+            </el-button>
           </el-col>
         </el-row>
       </div>
@@ -59,20 +42,13 @@
 
 <script>
 import todoList from "./todoList";
+import { getAdvice, postAdvice } from "../../../api/other";
 
 export default {
   props: {
     dialog: {
       type: Boolean,
-      default: function() {
-        return false;
-      }
-    },
-    advice: {
-      type: String,
-      default: function() {
-        return "建议...";
-      }
+      default: false
     }
   },
   components: {
@@ -85,7 +61,8 @@ export default {
       formLabelWidth: "80px",
       timer: null,
       fileList: [],
-      form: {}
+      form: {},
+      advice: ""
     };
   },
   watch: {
@@ -93,43 +70,47 @@ export default {
       this.localDialog = val;
     }
   },
+  mounted() {
+    this.fetchData();
+  },
   methods: {
+    fetchData() {
+      getAdvice(this.$store.getters.token).then(response => {
+        this.advice = response.data;
+      });
+    },
     handleClose(done) {
       if (this.loading) {
         return;
       }
-      this.$confirm("确定要提交表单吗？")
+      this.$confirm("确定要保存表单吗？")
         .then(() => {
           this.loading = true;
           this.timer = setTimeout(() => {
             done();
             // 动画关闭需要一定的时间
             setTimeout(() => {
-              this.$emit("dialogchange", this.localDialog);
-              this.loading = false;
+              postAdvice(this.$store.getters.token, {
+                advice: this.advice
+              }).then(() => {
+                this.$emit("dialogchange", this.localDialog);
+                this.loading = false;
+                this.$message({
+                  type: "success",
+                  message: "又立下一堆flag。。。"
+                });
+              });
             }, 40);
           }, 200);
         })
         .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
         });
     },
     cancelForm() {
       this.loading = false;
       this.localDialog = false;
       clearTimeout(this.timer);
-    },
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
-    // submitUpload() {
-    //   // 点击上传图片
-    //   this.$refs.upload.submit();
-    // },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
     }
   }
 };

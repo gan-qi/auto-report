@@ -1,13 +1,17 @@
 <template>
   <div class="container">
     <!-- 添加任务 -->
-    <div @keyup.enter="addTask">
+    <div>
       <el-input
         v-model="input"
-        placeholder="添加任务"
-        prefix-icon="el-icon-plus"
+        placeholder="立下明天的flag"
         clearable
       >
+        <el-button
+          slot="append"
+          icon="el-icon-plus"
+          @click="addTask"
+        ></el-button>
       </el-input>
     </div>
     <!-- 添加任务 结束 -->
@@ -21,11 +25,7 @@
     >
       <el-row :gutter="20">
         <el-col :span="2">
-          <div
-            @click="finishTask(item, 1)"
-            @click.middle="finishTask(item, 2)"
-            class="flag"
-          >
+          <div class="flag">
             <i class="el-icon-s-flag" />
           </div>
         </el-col>
@@ -36,7 +36,7 @@
               <el-button
                 slot="append"
                 icon="el-icon-check"
-                @click="editTask(item)"
+                @click="editTask2(item)"
               />
             </el-input>
           </div>
@@ -59,6 +59,13 @@
 </template>
 
 <script>
+import {
+  addTomorrowTask,
+  changeTomorrowTask,
+  deleteTomorrowTask,
+  getTomorrowTask
+} from "../../../api/tomorrow_task.js";
+
 export default {
   data() {
     return {
@@ -70,16 +77,38 @@ export default {
     addTask() {
       // 添加任务
       if (this.input !== "") {
-        this.lists.push({
-          title: this.input,
-          status: false,
-          edit: false
+        // 首先检测是否已存在该任务
+        let haven = false;
+        this.lists.forEach(item => {
+          if (item.title === this.input) haven = true;
         });
-        this.$message({
-          message: `哦豁?!你刚刚立下Flag: ${this.input}`,
-          type: "success"
-        });
-        this.input = "";
+        if (haven) {
+          this.$message({
+            message: "flag已立下，请不要重复立flag !",
+            type: "warning"
+          });
+        } else {
+          let data = {
+            title: this.input
+          };
+          addTomorrowTask(data, this.$store.getters.token)
+            .then(response => {
+              this.lists.push({
+                id: response.data,
+                title: this.input,
+                status: false,
+                edit: false
+              });
+              this.$message({
+                message: `哦豁?!你刚刚立下Flag: ${ this.input }`,
+                type: "success"
+              });
+              this.input = "";
+            })
+            .catch(() => {
+              this.$message.error("好像出了点错，你去找写代码的问问吧...");
+            });
+        }
       } else {
         this.$message({
           message: "所添加的任务不可为空 !",
@@ -89,12 +118,18 @@ export default {
     },
     deleteTask(task) {
       // 删除任务
-      for (let i = 0; i < this.lists.length; i++) {
-        if (this.lists[i] === task) {
-          this.lists.splice(i, 1);
-          this.$message("你居然违背了你立下的Flag...");
-        }
-      }
+      deleteTomorrowTask(task.id, this.$store.getters.token)
+        .then(() => {
+          for (let i = 0; i < this.lists.length; i++) {
+            if (this.lists[i] === task) {
+              this.lists.splice(i, 1);
+              this.$message("把明天的Flag也偷偷删掉...");
+            }
+          }
+        })
+        .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
+        });
     },
     editTask(title) {
       // 开启编辑任务
@@ -103,10 +138,39 @@ export default {
           this.lists[index].edit = !this.lists[index].edit;
         }
       });
-      this.$message({
-        message: "偷偷改一下Flag..."
-      });
-    }
+    },
+    editTask2(task) {
+      // 除了更改编辑状态，还要和后端同步数据
+      this.editTask(task.title);
+      changeTomorrowTask(task.id, task, this.$store.getters.token)
+        .then(() => {
+          this.$message({
+            message: "偷偷改一下Flag..."
+          });
+        })
+        .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
+        });
+    },
+    fetchData() {
+      getTomorrowTask(this.$store.getters.token)
+        .then(response => {
+          this.lists = response.data;
+        })
+        .catch(() => {
+          this.$message.error("好像出了点错，你去找写代码的问问吧...");
+        });
+    },
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>
+
+<style scoped>
+.box-card {
+  margin-top: 5px;
+  padding: 0;
+}
+</style>
