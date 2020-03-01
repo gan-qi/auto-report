@@ -23,3 +23,11 @@ export function logout(token) {
     params: { token }
   });
 }
+
+export function getUserList(token) {
+  return request({
+    url: "/user/list",
+    method: "get",
+    params: { token }
+  });
+}
