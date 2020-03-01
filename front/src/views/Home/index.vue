@@ -1,15 +1,30 @@
 <template>
   <div class="container">
     <!--添加任务-->
-    <div @keyup.enter="addTask">
-      <el-input
-        v-model="input"
-        placeholder="立下flag"
-        prefix-icon="el-icon-plus"
-        clearable
-      >
-      </el-input>
-    </div>
+    <el-row :gutter="5">
+      <el-col :span="4">
+        <el-tooltip :content="show_selected" placement="top">
+          <el-button
+            icon="el-icon-user"
+            @click="mult_dialog = true"
+            style="width: 100%;"
+          >
+            {{ selected_list_computed }}
+          </el-button>
+        </el-tooltip>
+      </el-col>
+      <el-col :span="20">
+        <div @keyup.enter="addTask">
+          <el-input
+            v-model="input"
+            placeholder="立下flag"
+            prefix-icon="el-icon-plus"
+            clearable
+          >
+          </el-input>
+        </div>
+      </el-col>
+    </el-row>
     <!--添加任务 结束-->
 
     <!--任务列表-->
@@ -114,6 +129,16 @@
     <!-- 设置面板 -->
     <panel :dialog="dialog" @dialogchange="dialogchange" />
     <!-- 设置面板 结束 -->
+
+    <!-- 设置多选用户 -->
+    <mult-user
+      :dialog="mult_dialog"
+      @dialogchange="multdialogchange"
+      :user_list="user_list"
+      :selected_list="selected_list"
+      @multselected="multselected"
+    />
+    <!-- 设置多选用户 结束 -->
   </div>
 </template>
 
@@ -121,12 +146,15 @@
 import { addTask, changeTask, deleteTask, getTask } from "../../api/task.js";
 import { downloadFile } from "../../api/download.js";
 import { sendMail } from "../../api/sendMail.js";
+import { getUserList } from "../../api/user";
 import panel from "./components/panel";
+import multUser from "./components/multUser";
 import fileDownload from "js-file-download";
 
 export default {
   name: "home",
   components: {
+    multUser,
     panel
   },
   data() {
@@ -146,7 +174,11 @@ export default {
         //   edit: false
         // }
       ],
-      dialog: false
+      dialog: false,
+      role: this.$store.getters.role,
+      mult_dialog: false,
+      user_list: [],
+      selected_list: []
     };
   },
   methods: {
@@ -164,7 +196,9 @@ export default {
             type: "warning"
           });
         } else {
+          // 开始添加任务
           let data = {
+            user_list: this.selected_list,
             title: this.input
           };
           addTask(data, this.$store.getters.token)
@@ -175,10 +209,17 @@ export default {
                 status: 0,
                 edit: false
               });
-              this.$message({
-                message: `哦豁?!你刚刚立下Flag: ${this.input}`,
-                type: "success"
-              });
+              if (this.selected_list.length === 1) {
+                this.$message({
+                  message: `哦豁?!你刚刚立下Flag: ${ this.input }`,
+                  type: "success"
+                });
+              } else {
+                this.$message({
+                  message: `哦豁?!大家一起立Flag啊: ${ this.input }`,
+                  type: "success"
+                });
+              }
               this.input = "";
             })
             .catch(() => {
@@ -273,6 +314,7 @@ export default {
         });
     },
     fetchData() {
+      // 获取今日任务
       getTask(this.$store.getters.token)
         .then(response => {
           this.lists = response.data;
@@ -280,13 +322,48 @@ export default {
         .catch(() => {
           this.$message.error("好像出了点错，你去找写代码的问问吧...");
         });
+      // 获取用户列表
+      getUserList(this.$store.getters.token).then(response => {
+        this.user_list = response.data;
+      });
+      // 起始值加入用户信息
+      this.selected_list.push({
+        id: this.$store.getters.id,
+        username: this.$store.getters.username
+      });
     },
     dialogchange(val) {
       this.dialog = val;
+    },
+    multdialogchange(val) {
+      this.mult_dialog = val;
+    },
+    multselected(val) {
+      this.selected_list = val;
     }
   },
   created() {
     this.fetchData();
+  },
+  computed: {
+    selected_list_computed() {
+      if (this.selected_list.length === 1) {
+        return this.selected_list[0].username;
+      } else {
+        return `已选中${ this.selected_list.length }人`;
+      }
+    },
+    show_selected() {
+      let local_selcted = "";
+      if (this.selected_list.length !== 1) {
+        this.selected_list.forEach(item => {
+          local_selcted += `${ item.username } `;
+        });
+      } else {
+        local_selcted = this.selected_list[0].username;
+      }
+      return local_selcted;
+    }
   }
 };
 </script>
