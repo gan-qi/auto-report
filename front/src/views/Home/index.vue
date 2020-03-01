@@ -56,9 +56,9 @@
             </span>
           </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="item.from_username === item.owner_username ? 21 : 16">
           <!--可编辑-->
-          <div v-if="item.edit">
+          <div v-if="item.edit && item.from_username === item.owner_username">
             <el-input v-model="item.title" class="editInput">
               <el-button
                 slot="append"
@@ -74,8 +74,19 @@
           </div>
           <!--可编辑 结束-->
         </el-col>
+        <el-col :span="item.from_username === item.owner_username ? 0 : 5">
+          <!--所属用户-->
+          <div class="from_user_tip">
+            {{
+              item.from_username === item.owner_username
+                ? ""
+                : item.from_username
+            }}
+          </div>
+          <!--所属用户 结束-->
+        </el-col>
         <el-col :span="1">
-          <div @click="deleteTask(item)" class="hiddenDelete">
+          <div @click="deleteTask(item)" class="hiddenDelete" v-if="item.from_username === item.owner_username">
             <i class="el-icon-remove" />
           </div>
         </el-col>
@@ -420,5 +431,9 @@ export default {
   text-align: center;
   font-style: italic;
   margin: 80px 30px;
+}
+
+.from_user_tip {
+  color: #909399;
 }
 </style>
